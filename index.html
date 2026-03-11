@@ -4,1072 +4,1203 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>SEE 2082 Countdown</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #f4f6fb;
-    --card: #ffffff;
-    --text: #1e2330;
-    --text-mid: #4e5568;
-    --text-soft: #8b92a5;
-    --border: #e6e9f0;
-
-    --blue: #3b82f6;
-    --blue-soft: #eff6ff;
-    --blue-border: #bfdbfe;
-    --blue-dark: #2563eb;
-
-    --green: #10b981;
-    --green-soft: #ecfdf5;
-    --green-border: #a7f3d0;
-    --green-dark: #059669;
-
-    --purple: #8b5cf6;
-    --purple-soft: #f5f3ff;
-    --purple-border: #ddd6fe;
-    --purple-dark: #7c3aed;
-
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --text: #1e1b2e;
+    --text-sub: #555270;
+    --text-muted: #8e8ba3;
+    --bg: #f4f2f7;
+    --card: rgba(255,255,255,0.78);
+    --card-solid: #fff;
+    --card-border: rgba(255,255,255,0.9);
+    --indigo: #6366f1;
+    --indigo-light: #eef2ff;
+    --violet: #8b5cf6;
+    --violet-light: #f5f3ff;
+    --emerald: #10b981;
+    --emerald-light: #ecfdf5;
     --amber: #f59e0b;
-    --amber-soft: #fffbeb;
-    --amber-border: #fde68a;
-    --amber-dark: #d97706;
-
-    --rose: #f43f5e;
-    --rose-soft: #fff1f2;
-    --rose-border: #fecdd3;
-
-    --teal: #14b8a6;
-    --teal-soft: #f0fdfa;
-    --teal-border: #99f6e4;
-    --teal-dark: #0d9488;
-
-    --pink: #ec4899;
-    --pink-soft: #fdf2f8;
-    --pink-border: #fbcfe8;
-
-    --radius: 20px;
-    --radius-sm: 14px;
-    --radius-xs: 10px;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-    --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+    --amber-light: #fffbeb;
+    --coral: #f43f5e;
+    --coral-light: #fff1f2;
+    --sky: #0ea5e9;
+    --sky-light: #f0f9ff;
+    --rose: #ec4899;
+    --rose-light: #fdf2f8;
+    --radius: 28px;
+    --radius-sm: 18px;
+    --radius-xs: 14px;
   }
+
+  html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
+    font-family: var(--sans);
     color: var(--text);
     min-height: 100vh;
-    -webkit-tap-highlight-color: transparent;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 15% 0%, #ddd6fe44 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 85% 20%, #fecdd344 0%, transparent 60%),
+      radial-gradient(ellipse 70% 40% at 50% 80%, #bae6fd33 0%, transparent 60%);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Subtle decorative shapes */
-  .bg-shape {
+  /* Decorative bg shapes */
+  body::before, body::after {
+    content: '';
     position: fixed;
     border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.2;
     pointer-events: none;
     z-index: 0;
-    filter: blur(100px);
-    opacity: 0.5;
   }
-  .bg-shape-1 { width: 500px; height: 500px; top: -200px; right: -150px; background: rgba(59,130,246,0.08); }
-  .bg-shape-2 { width: 400px; height: 400px; bottom: -100px; left: -120px; background: rgba(139,92,246,0.06); }
-  .bg-shape-3 { width: 350px; height: 350px; top: 40%; left: 60%; background: rgba(236,72,153,0.05); }
+  body::before {
+    width: 400px; height: 400px;
+    background: linear-gradient(135deg, #c4b5fd, #f9a8d4);
+    top: -100px; right: -100px;
+    animation: blobDrift 25s ease-in-out infinite;
+  }
+  body::after {
+    width: 350px; height: 350px;
+    background: linear-gradient(135deg, #93c5fd, #6ee7b7);
+    bottom: -80px; left: -80px;
+    animation: blobDrift 30s ease-in-out infinite reverse;
+  }
+  @keyframes blobDrift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(40px, -30px) scale(1.1); }
+  }
 
   .container {
-    max-width: 520px;
+    position: relative;
+    z-index: 1;
+    max-width: 460px;
     margin: 0 auto;
     padding: 12px;
     padding-bottom: 48px;
-    position: relative;
-    z-index: 1;
   }
 
   /* ===== HEADER ===== */
   .header {
     text-align: center;
-    padding: 36px 24px 30px;
-    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 35%, #8b5cf6 65%, #a855f7 100%);
-    border-radius: var(--radius);
-    margin-bottom: 14px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(59,130,246,0.22), 0 2px 8px rgba(99,102,241,0.12);
+    padding: 28px 0 20px;
   }
-  .header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
-  }
-  .header::after {
-    content: '';
-    position: absolute;
-    top: -60%; right: -25%;
-    width: 350px; height: 350px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.07);
-  }
-
-  .header-badge {
-    width: 60px; height: 60px;
-    background: rgba(255,255,255,0.15);
-    border: 2px solid rgba(255,255,255,0.2);
+  .header-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, var(--indigo), var(--violet));
     border-radius: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 18px;
-    position: relative;
-    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(99,102,241,0.3);
   }
-  .header-badge svg { width: 30px; height: 30px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-
+  .header-icon svg { width: 28px; height: 28px; stroke: #fff; }
+  .header-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--violet);
+    background: var(--violet-light);
+    border: 1px solid #e9e5fa;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+  }
   .header h1 {
-    font-size: 26px;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1.2;
-    margin-bottom: 4px;
-    position: relative;
-    letter-spacing: -0.5px;
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--text);
   }
-  .header .tagline {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.8);
-    letter-spacing: 0.3px;
-    margin-top: 6px;
-    position: relative;
+  .header h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--indigo), var(--violet), var(--rose));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
-  .header .subtitle {
-    font-size: 13px;
-    color: rgba(255,255,255,0.75);
-    font-weight: 500;
-    position: relative;
-    margin-top: 4px;
-    margin-bottom: 18px;
-    line-height: 1.5;
-  }
-
-  .date-row {
+  .header-dates {
     display: flex;
     justify-content: center;
     gap: 8px;
-    position: relative;
+    margin-top: 16px;
     flex-wrap: wrap;
   }
-  .date-pill {
+  .date-chip {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 8px 16px;
-    border-radius: 50px;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 100px;
     font-size: 12px;
-    font-weight: 700;
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.22);
-    color: #fff;
-    backdrop-filter: blur(6px);
+    font-weight: 600;
     letter-spacing: 0.2px;
   }
-  .date-pill svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .date-chip.ad { background: var(--indigo-light); color: #4338ca; border: 1px solid #c7d2fe; }
+  .date-chip.bs { background: var(--rose-light); color: #be185d; border: 1px solid #fbcfe8; }
+  .date-chip svg { width: 13px; height: 13px; flex-shrink: 0; }
 
-  /* ===== CARD SYSTEM ===== */
+  /* ===== GLASS CARD ===== */
   .card {
     background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 14px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-    animation: fadeUp 0.55s ease both;
-    position: relative;
-    overflow: hidden;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-  }
-  .card:nth-child(2) { animation-delay: 0.05s; }
-  .card:nth-child(3) { animation-delay: 0.1s; }
-  .card:nth-child(4) { animation-delay: 0.15s; }
-  .card:nth-child(5) { animation-delay: 0.2s; }
-  .card:nth-child(6) { animation-delay: 0.25s; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+    padding: 28px 22px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.03), 0 1px 4px rgba(0,0,0,0.02);
   }
 
-  .card-countdown::before { background: linear-gradient(90deg, var(--blue), var(--blue-dark)); }
-  .card-motivation::before { background: linear-gradient(90deg, var(--amber), var(--amber-dark)); }
-  .card-quote::before { background: linear-gradient(90deg, var(--purple), var(--purple-dark)); }
-  .card-question::before { background: linear-gradient(90deg, var(--teal), var(--teal-dark)); }
-  .card-tips::before { background: linear-gradient(90deg, var(--pink), #d946ef); }
-
-  .card-head {
-    display: flex;
+  .card-label {
+    display: inline-flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     margin-bottom: 22px;
   }
-  .card-icon-wrap {
-    width: 44px; height: 44px;
-    border-radius: 12px;
+  .card-label-icon {
+    width: 32px; height: 32px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-label-icon svg { width: 16px; height: 16px; }
+
+  /* ===== COUNTDOWN ===== */
+  .countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .cd-unit {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px 14px;
+  }
+  .cd-ring {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 8px;
+  }
+  .cd-ring svg {
+    width: 80px;
+    height: 80px;
+    transform: rotate(-90deg);
+  }
+  .cd-ring-bg {
+    fill: none;
+    stroke: #f0eef5;
+    stroke-width: 4;
+  }
+  .cd-ring-fill {
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s ease;
+  }
+  .cd-unit:nth-child(1) .cd-ring-fill { stroke: var(--indigo); }
+  .cd-unit:nth-child(2) .cd-ring-fill { stroke: var(--violet); }
+  .cd-unit:nth-child(3) .cd-ring-fill { stroke: var(--emerald); }
+  .cd-unit:nth-child(4) .cd-ring-fill { stroke: var(--coral); }
+
+  .cd-value {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-  }
-  .card-icon-wrap svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  .ciw-blue { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); box-shadow: 0 4px 14px rgba(59,130,246,0.3); }
-  .ciw-amber { background: linear-gradient(135deg, var(--amber), var(--amber-dark)); box-shadow: 0 4px 14px rgba(245,158,11,0.3); }
-  .ciw-purple { background: linear-gradient(135deg, var(--purple), var(--purple-dark)); box-shadow: 0 4px 14px rgba(139,92,246,0.3); }
-  .ciw-teal { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); box-shadow: 0 4px 14px rgba(20,184,166,0.3); }
-  .ciw-pink { background: linear-gradient(135deg, var(--pink), #d946ef); box-shadow: 0 4px 14px rgba(236,72,153,0.3); }
-
-  .card-label {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--text);
-    letter-spacing: -0.3px;
-    line-height: 1.2;
-  }
-  .card-sublabel {
-    font-size: 12px;
-    color: var(--text-soft);
-    font-weight: 500;
-    margin-top: 2px;
-  }
-
-  /* ===== COUNTDOWN GRID ===== */
-  .cd-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-  .cd-box {
-    text-align: center;
-    padding: 20px 6px 16px;
-    border-radius: var(--radius-sm);
-    position: relative;
-    transition: transform 0.2s;
-  }
-  .cd-box:active { transform: scale(0.96); }
-
-  .cd-box-days { background: var(--blue-soft); border: 1.5px solid var(--blue-border); }
-  .cd-box-hrs { background: var(--purple-soft); border: 1.5px solid var(--purple-border); }
-  .cd-box-min { background: var(--green-soft); border: 1.5px solid var(--green-border); }
-  .cd-box-sec { background: var(--amber-soft); border: 1.5px solid var(--amber-border); }
-
-  .cd-val {
-    font-size: 36px;
-    font-weight: 900;
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 700;
     line-height: 1;
-    margin-bottom: 8px;
-    letter-spacing: -1.5px;
-    font-variant-numeric: tabular-nums;
   }
-  .cd-box-days .cd-val { color: var(--blue); }
-  .cd-box-hrs .cd-val { color: var(--purple); }
-  .cd-box-min .cd-val { color: var(--green); }
-  .cd-box-sec .cd-val { color: var(--amber); }
+  .cd-unit:nth-child(1) .cd-value { color: var(--indigo); }
+  .cd-unit:nth-child(2) .cd-value { color: var(--violet); }
+  .cd-unit:nth-child(3) .cd-value { color: var(--emerald); }
+  .cd-unit:nth-child(4) .cd-value { color: var(--coral); }
 
-  .cd-unit {
+  .cd-label {
     font-size: 10px;
     font-weight: 700;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-soft);
+    color: var(--text-muted);
   }
 
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .cd-box-sec .cd-val { animation: pulse 1s ease-in-out infinite; }
-
-  /* ===== PROGRESS BAR ===== */
-  .progress-wrap {
-    margin-top: 22px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
+  .cd-unit:nth-child(4) .cd-value {
+    animation: secPulse 1s ease-in-out infinite;
   }
-  .progress-row {
+  @keyframes secPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.95); }
+  }
+
+  /* ===== PROGRESS ===== */
+  .progress-header {
     display: flex;
+    align-items: baseline;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
   }
-  .progress-label {
+  .progress-pct {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--indigo), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .progress-pct-label {
     font-size: 12px;
     font-weight: 600;
-    color: var(--text-mid);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    color: var(--text-muted);
   }
-  .progress-label svg { width: 15px; height: 15px; stroke: var(--blue); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .progress-pct {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--blue);
-  }
-  .progress-track {
-    width: 100%;
-    height: 10px;
-    background: #edf0f7;
-    border-radius: 50px;
+  .progress-bar-wrap {
+    position: relative;
+    height: 14px;
+    background: #f0eef5;
+    border-radius: 100px;
     overflow: hidden;
+    margin-bottom: 8px;
   }
-  .progress-bar {
+  .progress-bar-fill {
     height: 100%;
-    border-radius: 50px;
-    background: linear-gradient(90deg, var(--blue), var(--purple), var(--pink));
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--indigo), var(--violet), var(--rose));
     background-size: 200% 100%;
-    animation: shimmer 3s ease infinite;
-    transition: width 1s ease;
+    animation: barShimmer 4s ease-in-out infinite;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
   }
-  @keyframes shimmer {
+  .progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 30px; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
+    border-radius: 0 100px 100px 0;
+  }
+  @keyframes barShimmer {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
   }
-
-  /* ===== MOTIVATION ===== */
-  .motivation-msg {
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--text-mid);
+  .progress-milestones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
   }
-  .day-highlight {
-    display: inline-flex;
+  .milestone {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 5px;
-    background: linear-gradient(135deg, var(--amber), var(--amber-dark));
-    color: #fff;
-    font-weight: 800;
-    font-size: 14px;
-    padding: 4px 14px;
-    border-radius: 8px;
-    margin: 0 3px;
-    box-shadow: 0 3px 10px rgba(249,115,22,0.22);
+    gap: 4px;
   }
-  .motivation-msg strong {
-    color: var(--text);
+  .milestone-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #ddd8e8;
+    transition: all 0.4s ease;
+  }
+  .milestone-dot.reached {
+    background: var(--indigo);
+    box-shadow: 0 0 8px rgba(99,102,241,0.4);
+  }
+  .milestone-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+  .progress-sub {
+    font-size: 12.5px;
+    color: var(--text-sub);
+    margin-top: 14px;
+    line-height: 1.5;
+    text-align: center;
+    padding: 10px 14px;
+    background: #f8f7fb;
+    border-radius: var(--radius-xs);
+  }
+  .progress-sub strong {
+    color: var(--indigo);
     font-weight: 700;
   }
 
-  /* ===== QUOTE ===== */
-  .quote-block {
+  /* ===== MOTIVATION ===== */
+  .motivation-card {
     position: relative;
-    margin-bottom: 22px;
-    padding: 24px 24px 24px 28px;
-    background: linear-gradient(135deg, var(--purple-soft), #f0ecff);
-    border-radius: var(--radius-sm);
-    border-left: 4px solid var(--purple);
+    background: linear-gradient(135deg, #fef3c7, #fde68a44, #fef9c3);
+    border: 1px solid #fde68a;
+    border-radius: 20px;
+    padding: 24px 22px;
+    overflow: hidden;
   }
-  .quote-deco-open {
+  .motivation-card::before {
+    content: '';
     position: absolute;
-    top: 14px;
-    left: 16px;
-    opacity: 0.12;
+    top: -20px; right: -20px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, #fbbf2444, transparent 70%);
+    border-radius: 50%;
   }
-  .quote-deco-open svg { width: 32px; height: 32px; stroke: none; fill: var(--purple); }
-  .quote-deco-close {
-    position: absolute;
-    bottom: 10px;
-    right: 16px;
-    opacity: 0.12;
+  .motivation-icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 14px rgba(245,158,11,0.3);
   }
-  .quote-deco-close svg { width: 32px; height: 32px; stroke: none; fill: var(--purple); transform: rotate(180deg); }
-  .quote-content {
-    font-size: 16px;
+  .motivation-icon svg { width: 22px; height: 22px; stroke: #fff; fill: none; }
+  .motivation-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #92400e;
+    margin-bottom: 10px;
+  }
+  .motivation-text {
+    font-family: var(--serif);
+    font-size: 18px;
     font-weight: 500;
-    line-height: 1.75;
-    color: var(--text);
+    line-height: 1.6;
+    color: #451a03;
     position: relative;
     z-index: 1;
-    font-style: italic;
-    transition: all 0.3s ease;
+  }
+  .motivation-text strong {
+    color: #b45309;
+    font-weight: 800;
+    font-size: 20px;
   }
 
-  /* ===== BUTTONS ===== */
+  /* ===== DAILY QUOTE ===== */
+  .quote-card-inner {
+    position: relative;
+    background: linear-gradient(135deg, #faf5ff, #f3e8ff88, #fdf4ff);
+    border: 1px solid #e9d5ff;
+    border-radius: 20px;
+    padding: 32px 24px 28px;
+    overflow: hidden;
+  }
+  .quote-mark-open, .quote-mark-close {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .quote-mark-open {
+    top: 12px; left: 14px;
+    width: 48px; height: 48px;
+    opacity: 0.08;
+  }
+  .quote-mark-close {
+    bottom: 12px; right: 14px;
+    width: 48px; height: 48px;
+    opacity: 0.08;
+    transform: rotate(180deg);
+  }
+  .quote-text {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.7;
+    color: #3b0764;
+    position: relative;
+    z-index: 1;
+    min-height: 80px;
+    padding: 0 4px;
+  }
+  .quote-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .quote-author {
+    font-size: 13px;
+    color: #7c3aed;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .quote-author-line {
+    width: 24px; height: 2px;
+    background: linear-gradient(90deg, var(--violet), var(--rose));
+    border-radius: 2px;
+  }
+
+  /* Buttons */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 24px;
-    border-radius: var(--radius-xs);
-    font-size: 13px;
+    font-family: var(--sans);
     font-weight: 700;
+    font-size: 13px;
     border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
     -webkit-tap-highlight-color: transparent;
-    letter-spacing: 0.1px;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    overflow: hidden;
   }
-  .btn:active { transform: scale(0.96); }
-  .btn svg { width: 16px; height: 16px; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .btn:hover::after { opacity: 1; }
+  .btn:active { transform: scale(0.95); }
+  .btn svg { flex-shrink: 0; width: 15px; height: 15px; }
 
-  .btn-purple {
-    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  .btn-pill {
+    padding: 13px 28px;
+    border-radius: 100px;
+    letter-spacing: 0.3px;
+  }
+  .btn-block {
+    width: 100%;
+    padding: 15px 24px;
+    border-radius: 16px;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-violet {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
     color: #fff;
-    box-shadow: 0 4px 14px rgba(139,92,246,0.3);
+    box-shadow: 0 6px 20px rgba(139,92,246,0.35), 0 2px 6px rgba(139,92,246,0.2);
   }
-  .btn-purple svg { stroke: #fff; }
-  .btn-purple:hover { box-shadow: 0 6px 20px rgba(139,92,246,0.4); transform: translateY(-1px); }
-
-  .btn-green {
-    background: var(--green-soft);
-    color: var(--green-dark);
-    border: 2px solid var(--green-border);
-    flex: 1;
+  .btn-violet:hover {
+    box-shadow: 0 8px 28px rgba(139,92,246,0.45), 0 2px 8px rgba(139,92,246,0.3);
+    transform: translateY(-1px);
   }
-  .btn-green svg { stroke: var(--green-dark); }
-  .btn-green:active { background: var(--green); color: #fff; border-color: var(--green); }
-  .btn-green:active svg { stroke: #fff; }
 
-  .btn-rose {
-    background: var(--rose-soft);
-    color: var(--rose);
-    border: 2px solid var(--rose-border);
-    flex: 1;
-  }
-  .btn-rose svg { stroke: var(--rose); }
-  .btn-rose:active { background: var(--rose); color: #fff; border-color: var(--rose); }
-  .btn-rose:active svg { stroke: #fff; }
-
-  .btn-teal {
-    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  .btn-emerald {
+    background: linear-gradient(135deg, #10b981, #059669);
     color: #fff;
-    box-shadow: 0 4px 14px rgba(20,184,166,0.3);
+    box-shadow: 0 6px 20px rgba(16,185,129,0.3), 0 2px 6px rgba(16,185,129,0.15);
   }
-  .btn-teal svg { stroke: #fff; }
-  .btn-teal:hover { box-shadow: 0 6px 20px rgba(20,184,166,0.4); transform: translateY(-1px); }
+  .btn-emerald:hover {
+    box-shadow: 0 8px 28px rgba(16,185,129,0.4);
+    transform: translateY(-1px);
+  }
 
-  /* ===== QUESTION ===== */
-  .q-text {
-    font-size: 17px;
+  .btn-coral {
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(244,63,94,0.3), 0 2px 6px rgba(244,63,94,0.15);
+  }
+  .btn-coral:hover {
+    box-shadow: 0 8px 28px rgba(244,63,94,0.4);
+    transform: translateY(-1px);
+  }
+
+  .btn-sky {
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(14,165,233,0.3), 0 2px 6px rgba(14,165,233,0.15);
+  }
+  .btn-sky:hover {
+    box-shadow: 0 8px 28px rgba(14,165,233,0.4);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-sub);
+    border: 2px solid #e8e5f0;
+    box-shadow: none;
+  }
+  .btn-ghost:hover {
+    border-color: #d4d0e0;
+    background: #f8f7fb;
+    transform: translateY(-1px);
+  }
+
+  /* ===== SELF REFLECTION ===== */
+  .reflection-inner {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe66, #f0f9ff);
+    border: 1px solid #bae6fd;
+    border-radius: 20px;
+    padding: 28px 22px;
+  }
+  .reflection-q-icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--sky), #0284c7);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 14px rgba(14,165,233,0.3);
+  }
+  .reflection-q-icon svg { width: 22px; height: 22px; stroke: #fff; }
+  .reflection-question {
+    font-family: var(--serif);
+    font-size: 20px;
     font-weight: 600;
-    line-height: 1.65;
-    color: var(--text);
-    margin-bottom: 20px;
-    min-height: 56px;
-    transition: all 0.3s ease;
+    line-height: 1.55;
+    color: #0c4a6e;
+    min-height: 62px;
+    margin-bottom: 22px;
   }
-  .q-actions {
-    display: flex;
+  .reflection-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
-    margin-bottom: 8px;
   }
-  .feedback {
-    padding: 14px 16px;
-    border-radius: var(--radius-xs);
-    font-size: 13px;
+  .reflection-feedback {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    font-size: 14px;
     font-weight: 500;
-    line-height: 1.65;
-    margin-top: 14px;
+    line-height: 1.55;
     display: none;
   }
-  .feedback.visible { display: block; animation: fadeUp 0.3s ease; }
-  .fb-yes {
-    background: var(--green-soft);
-    color: var(--green-dark);
-    border: 1px solid var(--green-border);
+  .reflection-feedback.show {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    animation: feedbackIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .fb-no {
-    background: var(--amber-soft);
-    color: var(--amber-dark);
-    border: 1px solid var(--amber-border);
+  .reflection-feedback svg { flex-shrink: 0; margin-top: 2px; }
+  .reflection-feedback.positive {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+  }
+  .reflection-feedback.negative {
+    background: #fff1f2;
+    color: #9f1239;
+    border: 1px solid #fecdd3;
+  }
+  @keyframes feedbackIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* ===== STUDY TIPS ===== */
+  /* ===== TIPS ===== */
   .tips-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
   .tip-card {
-    padding: 18px 14px;
+    padding: 22px 16px 18px;
     border-radius: var(--radius-sm);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: transform 0.2s;
+    text-align: center;
+    transition: transform 0.3s ease;
   }
   .tip-card:active { transform: scale(0.97); }
-  .tc-1 { background: var(--blue-soft); border: 1.5px solid var(--blue-border); }
-  .tc-2 { background: var(--purple-soft); border: 1.5px solid var(--purple-border); }
-  .tc-3 { background: var(--amber-soft); border: 1.5px solid var(--amber-border); }
-  .tc-4 { background: var(--green-soft); border: 1.5px solid var(--green-border); }
-
+  .tip-card:nth-child(1) { background: var(--indigo-light); border: 1px solid #e0e7ff; }
+  .tip-card:nth-child(2) { background: var(--violet-light); border: 1px solid #ede9fe; }
+  .tip-card:nth-child(3) { background: var(--amber-light); border: 1px solid #fde68a; }
+  .tip-card:nth-child(4) { background: var(--emerald-light); border: 1px solid #a7f3d0; }
   .tip-icon {
-    width: 40px; height: 40px;
-    border-radius: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 48px; height: 48px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   }
-  .tc-1 .tip-icon { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); }
-  .tc-2 .tip-icon { background: linear-gradient(135deg, var(--purple), var(--purple-dark)); }
-  .tc-3 .tip-icon { background: linear-gradient(135deg, var(--amber), var(--amber-dark)); }
-  .tc-4 .tip-icon { background: linear-gradient(135deg, var(--green), var(--green-dark)); }
-  .tip-icon svg { width: 20px; height: 20px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
+  .tip-card:nth-child(1) .tip-icon { background: linear-gradient(135deg, var(--indigo), #4f46e5); }
+  .tip-card:nth-child(2) .tip-icon { background: linear-gradient(135deg, var(--violet), #7c3aed); }
+  .tip-card:nth-child(3) .tip-icon { background: linear-gradient(135deg, var(--amber), #d97706); }
+  .tip-card:nth-child(4) .tip-icon { background: linear-gradient(135deg, var(--emerald), #059669); }
+  .tip-icon svg { width: 24px; height: 24px; stroke: #fff; fill: none; }
   .tip-title {
-    font-size: 13px;
+    font-family: var(--serif);
+    font-size: 15px;
     font-weight: 700;
     color: var(--text);
-    line-height: 1.3;
+    margin-bottom: 4px;
   }
   .tip-desc {
     font-size: 11px;
-    color: var(--text-soft);
-    line-height: 1.5;
-    margin-top: -4px;
+    color: var(--text-muted);
+    line-height: 1.45;
   }
 
   /* ===== FOOTER ===== */
   .footer {
     text-align: center;
-    padding: 28px 16px 16px;
-    font-size: 12px;
-    color: var(--text-soft);
-    line-height: 1.7;
+    padding: 32px 0 16px;
   }
-  .footer-brand {
-    font-weight: 800;
-    font-size: 14px;
-    background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .footer-divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, var(--indigo), var(--violet), var(--rose));
+    border-radius: 3px;
+    margin: 0 auto 20px;
+  }
+  .footer-text {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .footer-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+    line-height: 1.5;
   }
 
-  /* ===== RESPONSIVE ===== */
-  @media (min-width: 420px) {
-    .container { padding: 16px; }
-    .header { padding: 40px 28px 34px; }
-    .header h1 { font-size: 30px; }
-    .cd-val { font-size: 42px; }
-    .cd-box { padding: 24px 8px 18px; }
+  /* Animations */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  @media (min-width: 600px) {
-    .container { padding: 24px; }
-    .card { padding: 28px; }
+  .anim {
+    opacity: 0;
+    animation: fadeSlideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .d1 { animation-delay: 0.05s; }
+  .d2 { animation-delay: 0.12s; }
+  .d3 { animation-delay: 0.19s; }
+  .d4 { animation-delay: 0.26s; }
+  .d5 { animation-delay: 0.33s; }
+  .d6 { animation-delay: 0.40s; }
+  .d7 { animation-delay: 0.47s; }
+
+  @media (min-width: 520px) {
+    .container { max-width: 520px; padding: 20px; }
+    .cd-ring { width: 90px; height: 90px; }
+    .cd-ring svg { width: 90px; height: 90px; }
+    .cd-value { font-size: 30px; }
+  }
+  @media (min-width: 768px) {
+    .container { max-width: 600px; }
+    .card { padding: 32px 28px; }
+    .header h1 { font-size: 42px; }
+    .cd-ring { width: 100px; height: 100px; }
+    .cd-ring svg { width: 100px; height: 100px; }
+    .cd-value { font-size: 34px; }
   }
 </style>
 </head>
 <body>
 
-<div class="bg-shape bg-shape-1"></div>
-<div class="bg-shape bg-shape-2"></div>
-<div class="bg-shape bg-shape-3"></div>
-
 <div class="container">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-badge">
-      <!-- Graduation Cap - Lucide style -->
-      <svg viewBox="0 0 24 24">
-        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-        <path d="M6 12v5c0 0 3 3 6 3s6-3 6-3v-5"/>
-      </svg>
+  <!-- Header -->
+  <header class="header anim">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>
     </div>
-    <h1>SEE 2082 Countdown</h1>
-    <span class="tagline">Your Journey to Success</span>
-    <p class="subtitle">Stay focused. Stay consistent. You've got this.</p>
-    <div class="date-row">
-      <span class="date-pill">
-        <!-- Calendar icon -->
-        <svg viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
+    <div class="header-badge">SEE 2082</div>
+    <h1>Countdown to<br><em>Your Exam</em></h1>
+    <div class="header-dates">
+      <span class="date-chip ad">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         April 2, 2026
       </span>
-      <span class="date-pill">
-        <svg viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
+      <span class="date-chip bs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Chaitra 19, 2082 B.S.
       </span>
     </div>
   </header>
 
-  <!-- COUNTDOWN -->
-  <section class="card card-countdown">
-    <div class="card-head">
-      <div class="card-icon-wrap ciw-blue">
-        <!-- Clock icon -->
-        <svg viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10"/>
-          <polyline points="12 6 12 12 16 14"/>
-        </svg>
+  <!-- Countdown -->
+  <div class="card anim d1">
+    <div class="card-label" style="color: var(--indigo);">
+      <div class="card-label-icon" style="background: var(--indigo-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       </div>
-      <div>
-        <div class="card-label">Time Remaining</div>
-        <div class="card-sublabel">Live countdown to exam day</div>
-      </div>
+      Countdown
     </div>
-    <div class="cd-grid">
-      <div class="cd-box cd-box-days">
-        <div class="cd-val" id="days">--</div>
-        <div class="cd-unit">Days</div>
-      </div>
-      <div class="cd-box cd-box-hrs">
-        <div class="cd-val" id="hours">--</div>
-        <div class="cd-unit">Hours</div>
-      </div>
-      <div class="cd-box cd-box-min">
-        <div class="cd-val" id="minutes">--</div>
-        <div class="cd-unit">Mins</div>
-      </div>
-      <div class="cd-box cd-box-sec">
-        <div class="cd-val" id="seconds">--</div>
-        <div class="cd-unit">Secs</div>
-      </div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-row">
-        <span class="progress-label">
-          <!-- Bar chart icon -->
-          <svg viewBox="0 0 24 24">
-            <line x1="18" y1="20" x2="18" y2="10"/>
-            <line x1="12" y1="20" x2="12" y2="4"/>
-            <line x1="6" y1="20" x2="6" y2="14"/>
+    <div class="countdown-grid">
+      <div class="cd-unit">
+        <div class="cd-ring">
+          <svg viewBox="0 0 80 80">
+            <circle class="cd-ring-bg" cx="40" cy="40" r="35"/>
+            <circle class="cd-ring-fill" id="ringDays" cx="40" cy="40" r="35" stroke-dasharray="219.91" stroke-dashoffset="0"/>
           </svg>
-          Preparation Progress
-        </span>
-        <span class="progress-pct" id="progressPct">0%</span>
+          <div class="cd-value" id="days">000</div>
+        </div>
+        <div class="cd-label">Days</div>
       </div>
-      <div class="progress-track">
-        <div class="progress-bar" id="progressBar" style="width:0%"></div>
+      <div class="cd-unit">
+        <div class="cd-ring">
+          <svg viewBox="0 0 80 80">
+            <circle class="cd-ring-bg" cx="40" cy="40" r="35"/>
+            <circle class="cd-ring-fill" id="ringHours" cx="40" cy="40" r="35" stroke-dasharray="219.91" stroke-dashoffset="0"/>
+          </svg>
+          <div class="cd-value" id="hours">00</div>
+        </div>
+        <div class="cd-label">Hours</div>
+      </div>
+      <div class="cd-unit">
+        <div class="cd-ring">
+          <svg viewBox="0 0 80 80">
+            <circle class="cd-ring-bg" cx="40" cy="40" r="35"/>
+            <circle class="cd-ring-fill" id="ringMins" cx="40" cy="40" r="35" stroke-dasharray="219.91" stroke-dashoffset="0"/>
+          </svg>
+          <div class="cd-value" id="minutes">00</div>
+        </div>
+        <div class="cd-label">Minutes</div>
+      </div>
+      <div class="cd-unit">
+        <div class="cd-ring">
+          <svg viewBox="0 0 80 80">
+            <circle class="cd-ring-bg" cx="40" cy="40" r="35"/>
+            <circle class="cd-ring-fill" id="ringSecs" cx="40" cy="40" r="35" stroke-dasharray="219.91" stroke-dashoffset="0"/>
+          </svg>
+          <div class="cd-value" id="seconds">00</div>
+        </div>
+        <div class="cd-label">Seconds</div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- MOTIVATION -->
-  <section class="card card-motivation">
-    <div class="card-head">
-      <div class="card-icon-wrap ciw-amber">
-        <!-- Flame icon -->
-        <svg viewBox="0 0 24 24">
-          <path d="M12 12c2-2.96 0-7-1-8 0 3.038-1.773 4.741-3 6-1.226 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.532-1.056-3.94-2-5-1.786 3-2 4-4 2z"/>
-        </svg>
+  <!-- Progress -->
+  <div class="card anim d2">
+    <div class="card-label" style="color: var(--emerald);">
+      <div class="card-label-icon" style="background: var(--emerald-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </div>
-      <div>
-        <div class="card-label">Daily Motivation</div>
-        <div class="card-sublabel">Keep pushing forward</div>
+      Preparation Progress
+    </div>
+    <div class="progress-header">
+      <div class="progress-pct" id="progressPct">0%</div>
+      <div class="progress-pct-label" id="progressLabel">time elapsed</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width: 0%;"></div>
+    </div>
+    <div class="progress-milestones">
+      <div class="milestone">
+        <div class="milestone-dot" id="m1"></div>
+        <div class="milestone-label">Start</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-dot" id="m2"></div>
+        <div class="milestone-label">25%</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-dot" id="m3"></div>
+        <div class="milestone-label">50%</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-dot" id="m4"></div>
+        <div class="milestone-label">75%</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-dot" id="m5"></div>
+        <div class="milestone-label">Exam</div>
       </div>
     </div>
-    <div class="motivation-msg" id="motivation"></div>
-  </section>
+    <div class="progress-sub" id="progressSub">Loading...</div>
+  </div>
 
-  <!-- QUOTE -->
-  <section class="card card-quote">
-    <div class="card-head">
-      <div class="card-icon-wrap ciw-purple">
-        <!-- Quote icon -->
-        <svg viewBox="0 0 24 24">
-          <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/>
-          <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
-        </svg>
+  <!-- Motivation -->
+  <div class="card anim d3" style="padding: 0; border: none; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none;">
+    <div class="motivation-card">
+      <div class="motivation-icon">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </div>
-      <div>
-        <div class="card-label">Inspirational Quote</div>
-        <div class="card-sublabel">Words to fuel your journey</div>
-      </div>
+      <div class="motivation-label">Daily Motivation</div>
+      <div class="motivation-text" id="motivationText">Loading...</div>
     </div>
-    <div class="quote-block">
-      <div class="quote-deco-open">
-        <svg viewBox="0 0 24 24">
-          <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/>
-          <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
-        </svg>
-      </div>
-      <p class="quote-content" id="quoteText">Loading...</p>
-      <div class="quote-deco-close">
-        <svg viewBox="0 0 24 24">
-          <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/>
-          <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
-        </svg>
-      </div>
-    </div>
-    <button class="btn btn-purple" onclick="showNewQuote()">
-      <!-- Refresh icon -->
-      <svg viewBox="0 0 24 24">
-        <polyline points="23 4 23 10 17 10"/>
-        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-      </svg>
-      New Quote
-    </button>
-  </section>
+  </div>
 
-  <!-- SELF REFLECTION -->
-  <section class="card card-question">
-    <div class="card-head">
-      <div class="card-icon-wrap ciw-teal">
-        <!-- Compass/Target icon -->
-        <svg viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10"/>
-          <circle cx="12" cy="12" r="6"/>
-          <circle cx="12" cy="12" r="2"/>
-        </svg>
+  <!-- Daily Quote -->
+  <div class="card anim d4" style="padding: 0; border: none; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none;">
+    <div class="card-label" style="color: var(--violet); padding: 0 0 14px 4px;">
+      <div class="card-label-icon" style="background: var(--violet-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       </div>
-      <div>
-        <div class="card-label">Self Reflection</div>
-        <div class="card-sublabel">Check in with yourself</div>
+      Daily Quote
+    </div>
+    <div class="quote-card-inner">
+      <svg class="quote-mark-open" viewBox="0 0 24 24" fill="#8b5cf6"><path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311C9.591 11.69 11 13.166 11 15c0 1.933-1.567 3.5-3.5 3.5-1.32 0-2.33-.514-2.917-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311C19.591 11.69 21 13.166 21 15c0 1.933-1.567 3.5-3.5 3.5-1.32 0-2.33-.514-2.917-1.179z"/></svg>
+      <svg class="quote-mark-close" viewBox="0 0 24 24" fill="#8b5cf6"><path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311C9.591 11.69 11 13.166 11 15c0 1.933-1.567 3.5-3.5 3.5-1.32 0-2.33-.514-2.917-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311C19.591 11.69 21 13.166 21 15c0 1.933-1.567 3.5-3.5 3.5-1.32 0-2.33-.514-2.917-1.179z"/></svg>
+      <div class="quote-text" id="quoteText">Loading...</div>
+      <div class="quote-footer">
+        <div class="quote-author">
+          <div class="quote-author-line"></div>
+          <span id="quoteAuthor"></span>
+        </div>
+        <button class="btn btn-pill btn-violet" onclick="showNewQuote()" style="padding: 10px 20px; font-size: 12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          New Quote
+        </button>
       </div>
     </div>
-    <p class="q-text" id="questionText">Loading...</p>
-    <div class="q-actions">
-      <button class="btn btn-green" onclick="answerQuestion(true)">
-        <!-- Check icon -->
-        <svg viewBox="0 0 24 24">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        Yes
+  </div>
+
+  <!-- Self Reflection -->
+  <div class="card anim d5" style="padding: 0; border: none; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none;">
+    <div class="card-label" style="color: var(--sky); padding: 0 0 14px 4px;">
+      <div class="card-label-icon" style="background: var(--sky-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5"/></svg>
+      </div>
+      Self Reflection
+    </div>
+    <div class="reflection-inner">
+      <div class="reflection-q-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="reflection-question" id="questionText">Loading...</div>
+      <div class="reflection-actions">
+        <button class="btn btn-block btn-emerald" onclick="answerQuestion(true)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Yes, I Did
+        </button>
+        <button class="btn btn-block btn-coral" onclick="answerQuestion(false)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Not Yet
+        </button>
+      </div>
+      <div class="reflection-feedback" id="feedback"></div>
+      <button class="btn btn-block btn-sky" onclick="showNewQuestion()" style="margin-top: 14px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        Next Question
       </button>
-      <button class="btn btn-rose" onclick="answerQuestion(false)">
-        <!-- X icon -->
-        <svg viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-        Not Yet
-      </button>
     </div>
-    <div class="feedback" id="feedback"></div>
-    <button class="btn btn-teal" onclick="showNewQuestion()" style="margin-top:14px;">
-      <!-- Arrow right icon -->
-      <svg viewBox="0 0 24 24">
-        <line x1="5" y1="12" x2="19" y2="12"/>
-        <polyline points="12 5 19 12 12 19"/>
-      </svg>
-      Next Question
-    </button>
-  </section>
+  </div>
 
-  <!-- STUDY TIPS -->
-  <section class="card card-tips">
-    <div class="card-head">
-      <div class="card-icon-wrap ciw-pink">
-        <!-- Lightbulb icon -->
-        <svg viewBox="0 0 24 24">
-          <path d="M9 18h6"/>
-          <path d="M10 22h4"/>
-          <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>
-        </svg>
+  <!-- Study Tips -->
+  <div class="card anim d6">
+    <div class="card-label" style="color: var(--amber);">
+      <div class="card-label-icon" style="background: var(--amber-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       </div>
-      <div>
-        <div class="card-label">Quick Study Tips</div>
-        <div class="card-sublabel">Smart habits for success</div>
-      </div>
+      Quick Study Tips
     </div>
     <div class="tips-grid">
-      <div class="tip-card tc-1">
+      <div class="tip-card">
         <div class="tip-icon">
-          <!-- Book Open icon -->
-          <svg viewBox="0 0 24 24">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-          </svg>
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         </div>
-        <span class="tip-title">Revise Notes</span>
-        <span class="tip-desc">Review what you learned daily</span>
+        <div class="tip-title">Revise Notes</div>
+        <div class="tip-desc">Review daily for stronger retention</div>
       </div>
-      <div class="tip-card tc-2">
+      <div class="tip-card">
         <div class="tip-icon">
-          <!-- File Text icon -->
-          <svg viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-          </svg>
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
-        <span class="tip-title">Past Papers</span>
-        <span class="tip-desc">Practice old exam questions</span>
+        <div class="tip-title">Past Papers</div>
+        <div class="tip-desc">Practice real questions regularly</div>
       </div>
-      <div class="tip-card tc-3">
+      <div class="tip-card">
         <div class="tip-icon">
-          <!-- Moon/Sleep icon -->
-          <svg viewBox="0 0 24 24">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </div>
-        <span class="tip-title">Sleep Well</span>
-        <span class="tip-desc">Rest helps memory retention</span>
+        <div class="tip-title">Sleep Well</div>
+        <div class="tip-desc">Rest 7-8 hours for a sharp mind</div>
       </div>
-      <div class="tip-card tc-4">
+      <div class="tip-card">
         <div class="tip-icon">
-          <!-- Droplet icon -->
-          <svg viewBox="0 0 24 24">
-            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-          </svg>
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
         </div>
-        <span class="tip-title">Stay Hydrated</span>
-        <span class="tip-desc">Water boosts concentration</span>
+        <div class="tip-title">Stay Hydrated</div>
+        <div class="tip-desc">Water fuels concentration</div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <span class="footer-brand">SEE 2082 Countdown</span><br>
-    Keep going - I'm always here for you!
+  <!-- Footer -->
+  <footer class="footer anim d7">
+    <div class="footer-divider"></div>
+    <div class="footer-text">Best of luck, future achiever!</div>
+    <div class="footer-sub">You have everything it takes to succeed.</div>
   </footer>
 
 </div>
 
 <script>
-// ======================== COUNTDOWN ========================
-const EXAM_DATE = new Date('2026-04-02T07:00:00+05:45');
+// ==================== COUNTDOWN ====================
+const EXAM_DATE = new Date('2026-04-02T06:00:00+05:45');
 const PREP_START = new Date('2025-04-01T00:00:00+05:45');
+const CIRC = 2 * Math.PI * 35; // ~219.91
+
+function setRing(id, value, max) {
+  const el = document.getElementById(id);
+  const offset = CIRC - (value / max) * CIRC;
+  el.setAttribute('stroke-dashoffset', offset);
+}
 
 function updateCountdown() {
   const now = new Date();
   const diff = EXAM_DATE - now;
 
   if (diff <= 0) {
-    document.getElementById('days').textContent = '0';
-    document.getElementById('hours').textContent = '00';
-    document.getElementById('minutes').textContent = '00';
-    document.getElementById('seconds').textContent = '00';
-    document.getElementById('progressPct').textContent = '100%';
-    document.getElementById('progressBar').style.width = '100%';
-    document.getElementById('motivation').innerHTML =
-      '<strong>The exam day is here!</strong> Stay calm, stay confident, and give your best. You are prepared!';
+    ['days','hours','minutes','seconds'].forEach(id => {
+      document.getElementById(id).textContent = '0';
+    });
+    document.getElementById('motivationText').innerHTML = 'The exam day is here! Give it your absolute best!';
     return;
   }
 
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
 
-  document.getElementById('days').textContent = d;
-  document.getElementById('hours').textContent = String(h).padStart(2, '0');
-  document.getElementById('minutes').textContent = String(m).padStart(2, '0');
-  document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+  document.getElementById('days').textContent = days;
+  document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+  document.getElementById('minutes').textContent = String(mins).padStart(2, '0');
+  document.getElementById('seconds').textContent = String(secs).padStart(2, '0');
 
-  const total = EXAM_DATE - PREP_START;
+  setRing('ringDays', Math.min(days, 365), 365);
+  setRing('ringHours', hours, 24);
+  setRing('ringMins', mins, 60);
+  setRing('ringSecs', secs, 60);
+
+  // Progress
+  const totalPrep = EXAM_DATE - PREP_START;
   const elapsed = now - PREP_START;
-  const pct = Math.max(0, Math.min(100, (elapsed / total) * 100));
+  const pct = Math.min(100, Math.max(0, (elapsed / totalPrep) * 100));
+  document.getElementById('progressFill').style.width = pct.toFixed(1) + '%';
   document.getElementById('progressPct').textContent = pct.toFixed(1) + '%';
-  document.getElementById('progressBar').style.width = pct.toFixed(1) + '%';
 
-  updateMotivation(d);
+  const totalDays = Math.floor(totalPrep / 86400000);
+  document.getElementById('progressSub').innerHTML = '<strong>' + days + ' days</strong> remaining out of <strong>' + totalDays + '</strong> total preparation days';
+
+  // Milestones
+  document.getElementById('m1').classList.toggle('reached', pct >= 0);
+  document.getElementById('m2').classList.toggle('reached', pct >= 25);
+  document.getElementById('m3').classList.toggle('reached', pct >= 50);
+  document.getElementById('m4').classList.toggle('reached', pct >= 75);
+  document.getElementById('m5').classList.toggle('reached', pct >= 100);
+
+  updateMotivation(days);
 }
 
-function updateMotivation(days) {
-  let msg = '';
-  if (days > 300) {
-    msg = 'You have <span class="day-highlight">' + days + ' days</span> left. That is a <strong>tremendous amount of time</strong>. Start building strong habits now and you will be unstoppable by exam day.';
-  } else if (days > 200) {
-    msg = 'With <span class="day-highlight">' + days + ' days</span> remaining, you are in the <strong>golden zone of preparation</strong>. Every chapter you cover now is an investment in your future.';
-  } else if (days > 100) {
-    msg = '<span class="day-highlight">' + days + ' days</span> to go. The clock is moving. <strong>Stay focused and consistent</strong>. Those who study a little every day will outperform those who cram.';
-  } else if (days > 50) {
-    msg = 'Only <span class="day-highlight">' + days + ' days</span> remain. This is <strong>crunch time</strong>. Prioritize weak subjects, practice past papers, and keep your confidence high.';
-  } else if (days > 14) {
-    msg = 'Just <span class="day-highlight">' + days + ' days</span> left! Focus on <strong>revision and practice tests</strong>. You have prepared for this — now refine and sharpen your knowledge.';
-  } else if (days > 0) {
-    msg = '<span class="day-highlight">' + days + ' days</span> to go — almost there! <strong>Stay calm, review key points</strong>, and trust in your preparation. You are ready for this.';
+function updateMotivation(d) {
+  const el = document.getElementById('motivationText');
+  if (d > 300) {
+    el.innerHTML = 'You have <strong>' + d + ' days</strong> ahead. This is a golden head start. Build strong habits now and your future self will thank you.';
+  } else if (d > 200) {
+    el.innerHTML = '<strong>' + d + ' days</strong> remain. Plenty of time to master every subject. Stay consistent and keep pushing forward.';
+  } else if (d > 100) {
+    el.innerHTML = '<strong>' + d + ' days</strong> to go. The serious phase begins now. Focus on weak areas and practice past questions.';
+  } else if (d > 50) {
+    el.innerHTML = 'Only <strong>' + d + ' days</strong> left! Time is precious. Revise thoroughly, solve model questions, and stay disciplined.';
+  } else if (d > 20) {
+    el.innerHTML = '<strong>' + d + ' days</strong> remain. Every single hour counts. Revision, self-testing, and confidence building are key.';
+  } else if (d > 7) {
+    el.innerHTML = 'Just <strong>' + d + ' days</strong> to go! Final revision time. Focus on key formulas, important questions, and stay calm.';
+  } else if (d > 1) {
+    el.innerHTML = 'Only <strong>' + d + ' days</strong> left! Trust your hard work. Believe in yourself and stay confident.';
+  } else {
+    el.innerHTML = '<strong>Tomorrow is the day!</strong> Get a good night\'s sleep, organize your materials, and walk in with confidence.';
   }
-  document.getElementById('motivation').innerHTML = msg;
 }
 
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
-// ======================== QUOTES ========================
+// ==================== QUOTES ====================
 const quotes = [
-  "Success is not final, failure is not fatal — it is the courage to continue that counts.",
-  "The secret of getting ahead is getting started.",
-  "Don't watch the clock; do what it does — keep going.",
-  "Education is the passport to the future, for tomorrow belongs to those who prepare today.",
-  "Believe you can and you're halfway there.",
-  "It always seems impossible until it's done.",
-  "The harder you work for something, the greater you'll feel when you achieve it.",
-  "Dream big, work hard, stay focused, and surround yourself with good people.",
-  "Strive for progress, not perfection.",
-  "Small daily improvements over time lead to stunning results.",
-  "Success doesn't come from what you do occasionally, it comes from what you do consistently.",
-  "The only way to do great work is to love what you do.",
-  "Push yourself, because no one else is going to do it for you.",
-  "Great things never come from comfort zones.",
-  "Don't stop when you're tired — stop when you're done.",
-  "Wake up with determination. Go to bed with satisfaction.",
-  "The pain you feel today will be the strength you feel tomorrow.",
-  "Hard work beats talent when talent doesn't work hard.",
-  "Your limitation — it's only your imagination.",
-  "Difficult roads often lead to beautiful destinations.",
-  "The future belongs to those who believe in the beauty of their dreams.",
-  "You don't have to be great to start, but you have to start to be great.",
-  "A year from now, you'll wish you had started today.",
-  "Discipline is the bridge between goals and accomplishment.",
-  "There are no shortcuts to any place worth going.",
-  "Knowledge is power. Study is the key.",
-  "Every expert was once a beginner.",
-  "Focus on being productive instead of busy.",
-  "Study hard, for the well is deep, and our brains are shallow.",
-  "The beautiful thing about learning is that nobody can take it away from you.",
-  "An investment in knowledge pays the best interest.",
-  "Don't let what you cannot do interfere with what you can do.",
-  "Today a reader, tomorrow a leader.",
-  "Motivation gets you going, but discipline keeps you growing.",
-  "Work in silence. Let your results speak.",
-  "You are capable of more than you know.",
-  "Consistency is what transforms average into excellence.",
-  "The exam tests your preparation, not your worth.",
-  "Study like there's no tomorrow, so tomorrow you can celebrate.",
-  "Your future self will thank you for the effort you put in today.",
-  "One page at a time, one chapter at a time — that's how success is built.",
-  "Excellence is not a skill. It is an attitude.",
-  "Fall seven times, stand up eight.",
-  "What we learn with pleasure we never forget.",
-  "There is no substitute for hard work.",
-  "Success is the sum of small efforts repeated day in and day out.",
-  "The more that you read, the more things you will know.",
-  "Courage is not having the strength to go on; it is going on when you don't have the strength.",
-  "Learning never exhausts the mind.",
-  "Set your goals high, and don't stop until you get there.",
-  "It does not matter how slowly you go, as long as you do not stop.",
-  "Challenges are what make life interesting. Overcoming them is what makes life meaningful.",
-  "Champions keep playing until they get it right.",
-  "Be so good they can't ignore you.",
-  "Action is the foundational key to all success."
+  { text: "Success is the sum of small efforts, repeated day in and day out.", author: "Robert Collier" },
+  { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+  { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+  { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+  { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+  { text: "Education is the most powerful weapon you can use to change the world.", author: "Nelson Mandela" },
+  { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+  { text: "Our greatest weakness lies in giving up. The most certain way to succeed is to try just one more time.", author: "Thomas Edison" },
+  { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+  { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+  { text: "A person who never made a mistake never tried anything new.", author: "Albert Einstein" },
+  { text: "Strive for progress, not perfection.", author: "Unknown" },
+  { text: "Hard work beats talent when talent doesn't work hard.", author: "Tim Notke" },
+  { text: "The expert in anything was once a beginner.", author: "Helen Hayes" },
+  { text: "I find that the harder I work, the more luck I seem to have.", author: "Thomas Jefferson" },
+  { text: "There are no shortcuts to any place worth going.", author: "Beverly Sills" },
+  { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+  { text: "Great things never come from comfort zones.", author: "Unknown" },
+  { text: "Dream big. Start small. Act now.", author: "Robin Sharma" },
+  { text: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn" },
+  { text: "Wake up with determination. Go to bed with satisfaction.", author: "Unknown" },
+  { text: "It's not about having time. It's about making time.", author: "Unknown" },
+  { text: "Learning is not attained by chance, it must be sought for with ardor.", author: "Abigail Adams" },
+  { text: "The more that you read, the more things you will know.", author: "Dr. Seuss" },
+  { text: "What we learn with pleasure we never forget.", author: "Alfred Mercier" },
+  { text: "An investment in knowledge pays the best interest.", author: "Benjamin Franklin" },
+  { text: "Today a reader, tomorrow a leader.", author: "Margaret Fuller" },
+  { text: "Study while others are sleeping; work while others are loafing.", author: "William Arthur Ward" },
+  { text: "The beautiful thing about learning is that no one can take it away from you.", author: "B.B. King" },
+  { text: "Success doesn't come to you, you go to it.", author: "Marva Collins" },
+  { text: "Don't let what you cannot do interfere with what you can do.", author: "John Wooden" },
+  { text: "Every accomplishment starts with the decision to try.", author: "John F. Kennedy" },
+  { text: "The pain you feel today will be the strength you feel tomorrow.", author: "Unknown" },
+  { text: "Champions keep playing until they get it right.", author: "Billie Jean King" },
+  { text: "Focus on being productive instead of busy.", author: "Tim Ferriss" },
+  { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+  { text: "The difference between ordinary and extraordinary is that little extra.", author: "Jimmy Johnson" },
+  { text: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+  { text: "Your limitation \u2014 it's only your imagination.", author: "Unknown" },
+  { text: "Motivation gets you started. Habit keeps you going.", author: "Jim Ryun" },
+  { text: "Small daily improvements over time lead to stunning results.", author: "Robin Sharma" },
+  { text: "Fall seven times, stand up eight.", author: "Japanese Proverb" },
+  { text: "What you do today can improve all your tomorrows.", author: "Ralph Marston" },
+  { text: "Excellence is not a skill. It is an attitude.", author: "Ralph Marston" },
+  { text: "Knowledge is power. Information is liberating.", author: "Kofi Annan" },
+  { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu" },
+  { text: "Doubt kills more dreams than failure ever will.", author: "Suzy Kassem" },
+  { text: "Work hard in silence. Let success make the noise.", author: "Frank Ocean" },
+  { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
+  { text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+  { text: "Be stronger than your strongest excuse.", author: "Unknown" },
+  { text: "Successful people do what unsuccessful people are not willing to do.", author: "Jim Rohn" },
+  { text: "Do something today that your future self will thank you for.", author: "Sean Patrick Flanery" },
+  { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" }
 ];
 
 let usedQuotes = [];
-
 function getRandomQuote() {
   if (usedQuotes.length >= quotes.length) usedQuotes = [];
   let idx;
-  do { idx = Math.floor(Math.random() * quotes.length); }
-  while (usedQuotes.includes(idx));
+  do { idx = Math.floor(Math.random() * quotes.length); } while (usedQuotes.includes(idx));
   usedQuotes.push(idx);
   return quotes[idx];
 }
 
 function showNewQuote() {
-  const el = document.getElementById('quoteText');
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(8px)';
-  setTimeout(function() {
-    el.textContent = getRandomQuote();
-    el.style.opacity = '1';
-    el.style.transform = 'translateY(0)';
-  }, 200);
+  const q = getRandomQuote();
+  const textEl = document.getElementById('quoteText');
+  const authorEl = document.getElementById('quoteAuthor');
+  textEl.style.opacity = '0';
+  textEl.style.transform = 'translateY(8px)';
+  authorEl.style.opacity = '0';
+  setTimeout(() => {
+    textEl.textContent = q.text;
+    authorEl.textContent = q.author;
+    textEl.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    authorEl.style.transition = 'opacity 0.5s ease 0.1s';
+    textEl.style.opacity = '1';
+    textEl.style.transform = 'translateY(0)';
+    authorEl.style.opacity = '1';
+  }, 250);
 }
 showNewQuote();
 
-// ======================== QUESTIONS ========================
+// ==================== QUESTIONS ====================
 const questions = [
   "Did you study enough today?",
   "Are you improving every day?",
-  "Have you revised your weak subjects?",
-  "Did you practice any math problems today?",
-  "Have you read your science chapters?",
-  "Did you review your social studies notes?",
-  "Are you solving past exam papers regularly?",
-  "Have you made a study schedule this week?",
-  "Did you take any practice tests recently?",
-  "Are you sleeping at least 7 hours each night?",
-  "Have you stayed away from distractions today?",
-  "Did you ask for help on topics you didn't understand?",
-  "Are you eating healthy to keep your brain sharp?",
-  "Have you exercised or taken a walk today?",
-  "Did you spend less time on your phone today?",
-  "Are you drinking enough water?",
-  "Have you set specific goals for this week?",
-  "Did you complete your homework on time?",
-  "Are you taking short breaks between study sessions?",
-  "Have you organized your study materials?",
-  "Did you learn something new today?",
-  "Are you confident about your preparation?",
-  "Have you practiced your English writing skills?",
-  "Did you review any formulas or equations?",
-  "Are you staying positive about the exam?",
-  "Have you discussed difficult topics with friends?",
-  "Did you attempt any creative writing today?",
-  "Are you tracking your study hours?",
-  "Have you practiced map-based questions?",
-  "Did you test yourself on key definitions?",
-  "Are you revising regularly instead of cramming?",
-  "Have you prepared summary notes for each subject?",
-  "Did you stay focused during your study sessions?",
-  "Are you rewarding yourself for small achievements?",
-  "Have you identified your three weakest topics?",
-  "Did you practice reading comprehension today?",
-  "Are you studying in a quiet, comfortable space?",
-  "Have you balanced all subjects in your study plan?"
+  "Have you revised your weakest subject this week?",
+  "Did you solve any past exam papers today?",
+  "Are you managing your time wisely?",
+  "Have you practiced mathematics today?",
+  "Did you read your science notes this week?",
+  "Are you staying consistent with your study schedule?",
+  "Have you taken short breaks between study sessions?",
+  "Did you learn any new formulas today?",
+  "Are you eating healthy and drinking enough water?",
+  "Have you discussed difficult topics with friends or teachers?",
+  "Did you sleep at least 7 hours last night?",
+  "Are you studying without distractions?",
+  "Have you written down your goals for this week?",
+  "Did you complete all your homework on time?",
+  "Are you practicing writing answers within time limits?",
+  "Have you reviewed chapters you studied last month?",
+  "Did you attempt any model questions today?",
+  "Are you tracking your study progress?",
+  "Have you identified your top 3 weak areas?",
+  "Did you practice English grammar today?",
+  "Are you staying positive about your exam preparation?",
+  "Have you memorized key definitions and terms?",
+  "Did you explain a concept to someone else today?",
+  "Are you balancing all subjects in your study plan?",
+  "Have you prepared short notes for quick revision?",
+  "Did you exercise or go for a walk today?",
+  "Are you using past papers to find important questions?",
+  "Have you set a daily study target?",
+  "Did you minimize phone usage during study time?",
+  "Are you revising Nepali literature and grammar?",
+  "Have you practiced map work for social studies?",
+  "Did you take a practice test this week?",
+  "Are you reading your textbooks actively, not passively?",
+  "Have you asked for help when stuck on a topic?",
+  "Did you organize your study materials today?",
+  "Are you keeping a positive mindset about the exam?"
 ];
 
 const positiveFeedback = [
-  "Amazing! Keep it up — you're building a winning habit!",
-  "That's the spirit! Consistency will take you far.",
-  "Wonderful! Every effort counts towards your success.",
-  "Great job! You're on the right track. Stay focused!",
-  "Excellent! Your discipline today will pay off on exam day."
+  "Excellent! Keep up the amazing work!",
+  "That's the spirit! Consistency is key to success.",
+  "Wonderful! You're building great habits.",
+  "Proud of you! Every effort counts.",
+  "Great job! You're getting closer to your goal.",
+  "Fantastic! Your hard work will pay off.",
+  "Amazing! Stay on this path and you'll shine."
 ];
 
 const negativeFeedback = [
-  "No worries! Start now — even 30 minutes can make a difference.",
-  "It's okay! Tomorrow is a new opportunity to do better.",
-  "Don't be too hard on yourself. Just take one small step today.",
-  "Every moment is a fresh start. You can begin right now!",
-  "Progress isn't always linear. The important thing is to keep trying."
+  "No worries! Start right now \u2014 it's never too late.",
+  "Today is a fresh opportunity. Make it count!",
+  "Don't be hard on yourself. Take the first small step now.",
+  "It's okay! Even 15 minutes of study makes a difference.",
+  "Use this moment as motivation to begin. You've got this!",
+  "Tomorrow's success starts with today's effort.",
+  "Remember, progress is more important than perfection."
 ];
 
 let usedQuestions = [];
-
 function getRandomQuestion() {
   if (usedQuestions.length >= questions.length) usedQuestions = [];
   let idx;
-  do { idx = Math.floor(Math.random() * questions.length); }
-  while (usedQuestions.includes(idx));
+  do { idx = Math.floor(Math.random() * questions.length); } while (usedQuestions.includes(idx));
   usedQuestions.push(idx);
   return questions[idx];
 }
 
 function showNewQuestion() {
+  const q = getRandomQuestion();
   const el = document.getElementById('questionText');
   const fb = document.getElementById('feedback');
-  fb.classList.remove('visible');
-  fb.className = 'feedback';
+  fb.classList.remove('show', 'positive', 'negative');
   el.style.opacity = '0';
   el.style.transform = 'translateY(8px)';
-  setTimeout(function() {
-    el.textContent = getRandomQuestion();
+  setTimeout(() => {
+    el.textContent = q;
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     el.style.opacity = '1';
     el.style.transform = 'translateY(0)';
-  }, 200);
+  }, 250);
 }
 
-function answerQuestion(isYes) {
+function answerQuestion(yes) {
   const fb = document.getElementById('feedback');
-  const pool = isYes ? positiveFeedback : negativeFeedback;
-  fb.textContent = pool[Math.floor(Math.random() * pool.length)];
-  fb.className = 'feedback visible ' + (isYes ? 'fb-yes' : 'fb-no');
+  const arr = yes ? positiveFeedback : negativeFeedback;
+  const msg = arr[Math.floor(Math.random() * arr.length)];
+  const icon = yes
+    ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>';
+  fb.innerHTML = icon + '<span>' + msg + '</span>';
+  fb.className = 'reflection-feedback show ' + (yes ? 'positive' : 'negative');
 }
 
 showNewQuestion();
